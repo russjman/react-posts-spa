@@ -1,24 +1,21 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { increment, decrement, addPost} from './actions'
+import { getPosts, startSetPosts } from './actions/posts'
 import './App.css';
 
 import Posts from './components/Posts';
 
 function App() {
-  const counter = useSelector(state => state.counter);
-  const isLogged = useSelector(state => state.isLogged);
   const posts = useSelector(state => state.posts)
   const dispatch = useDispatch();
 
+console.log('posts', posts);
   return (
     <div className="PostsSPA">
-      <h1>Counter {counter}</h1>
-      <h2>isLogged { isLogged ? 'yes' : 'no'}</h2>
-      <h2>Posts: {posts.length}</h2>
-      <button onClick={() => dispatch(increment(5))}>+</button>
-      <button onClick={() => dispatch(decrement(5))}>-</button>
-      <button onClick={() => dispatch(addPost({title:'newPost'}))}>add post</button>
+      <h1>Posts: {posts.length}</h1>
+      <button onClick={() => dispatch(getPosts())}>getPosts</button>
+      <button onClick={() => dispatch(startSetPosts())}>startSetPosts</button>
+
 
       <Posts />
     </div>
