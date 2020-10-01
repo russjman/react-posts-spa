@@ -4,68 +4,31 @@ import { Button, Container, Grid, Paper, TextField, Dialog, DialogContent, Dialo
 import PostsTable from './posts/PostsTable';
 import PostForm from './posts/PostForm';
 
-import PostsApi  from '../api/postsApi';
+import { useSelector, useDispatch, connect } from 'react-redux';
+import { editPostAction } from '../actions/posts'
 
+// TODO: Unit tests
+// TODO: Get posts on load
+// TODO: Filter/search posts by title
+// TODO: Edit post(save to store)
+// TODO: Add post(save to store)
+// TODO: Add post button and modal ui
 class Posts extends React.Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      posts: [],
-      dialogOpen: false
+      dialogOpen: false,
+      selectedPost: {},
     }
 
     this.handleCloseDialog = this.handleCloseDialog.bind(this);
     this.handleRowClick = this.handleRowClick.bind(this);
-
+    this.handleSearchPost = this.handleSearchPost.bind(this);
+    this.handleSavePost = this.handleSavePost.bind(this);
   }
 
   componentDidMount() {
-    let { state } = this;
-    this.postsApi = new PostsApi();
-    this.postsApi.getPosts().then((r) => {
-      console.log('got posts', r);
-      //state.posts = r;
-      const posts = [
-        {
-          "userId": 1,
-          "id": 1,
-          "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
-          "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
-        },
-        {
-          "userId": 1,
-          "id": 2,
-          "title": "qui est esse",
-          "body": "est rerum tempore vitae\nsequi sint nihil reprehenderit dolor beatae ea dolores neque\nfugiat blanditiis voluptate porro vel nihil molestiae ut reiciendis\nqui aperiam non debitis possimus qui neque nisi nulla"
-        },
-        {
-          "userId": 1,
-          "id": 3,
-          "title": "ea molestias quasi exercitationem repellat qui ipsa sit aut",
-          "body": "et iusto sed quo iure\nvoluptatem occaecati omnis eligendi aut ad\nvoluptatem doloribus vel accusantium quis pariatur\nmolestiae porro eius odio et labore et velit aut"
-        },
-        {
-          "userId": 1,
-          "id": 4,
-          "title": "eum et est occaecati",
-          "body": "ullam et saepe reiciendis voluptatem adipisci\nsit amet autem assumenda provident rerum culpa\nquis hic commodi nesciunt rem tenetur doloremque ipsam iure\nquis sunt voluptatem rerum illo velit"
-        },
-        {
-          "userId": 1,
-          "id": 5,
-          "title": "nesciunt quas odio",
-          "body": "repudiandae veniam quaerat sunt sed\nalias aut fugiat sit autem sed est\nvoluptatem omnis possimus esse voluptatibus quis\nest aut tenetur dolor neque"
-        },
-        {
-          "userId": 1,
-          "id": 6,
-          "title": "nesciunt quas odio",
-          "body": "repudiandae veniam quaerat sunt sed\nalias aut fugiat sit autem sed est\nvoluptatem omnis possimus esse voluptatibus quis\nest aut tenetur dolor neque"
-        },
-      ];
-      this.setState({posts:posts});
-    })
   }
 
   handleOpenDialog() {
@@ -75,39 +38,59 @@ class Posts extends React.Component {
 
   handleRowClick(e) {
     console.log('handleRowClick', e);
-    this.setState({dialogOpen:true});
+    this.setState({dialogOpen:true, selectedPost: e.data});
   }
 
   handleCloseDialog() {
     console.log('handleCloseDialog');
-    this.setState({dialogOpen:false});
+    this.setState({dialogOpen:false, selectedPost: {}});
+  }
+
+  handleSavePost(e) {
+    console.log('handleSavePost', this.state.selectedPost);
+    // const dispatch = useDispatch();
+    // dispatch(editPostAction());
+    // this.setState({dialogOpen:false});
+  }
+
+  handleSearchPost(e) {
+    console.log('handleSearchPost', e.target.value);
+    const { posts } = this.props;
+    const { value } = e.target;
+    if(value) {
+      this.setState({filteredPosts: posts.items.filter(p => p.title.contains(value) ) });
+    }
   }
 
   render() {
-    const { posts, dialogOpen } = this.state;
+    const { dialogOpen, selectedPost, filteredPosts} = this.state;
+    const { posts } = this.props;
     return (
       <Container>
-        <Grid justify="center" container>
+        <Grid justify="center" spacing={2} container>
           <Grid item xs={5}>
-            <TextField id="posts-search-field" label="Search Posts" variant="outlined" fullWidth />
+            <TextField id="posts-search-field" label="Search Posts" onChange={(e) => this.handleSearchPost(e) } variant="outlined" fullWidth />
           </Grid>
+          <Grid item xs={1}><Button color="primary" variant="contained" fullWidth>Search</Button></Grid>
+          <Grid item xs={1}><Button color="primary" variant="contained" onClick={() => this.handleOpenDialog() } fullWidth>Add</Button></Grid>
           <Grid item xs={12} >
-            <PostsTable posts={posts} onRowClick={this.handleRowClick} />
+            <Paper elevation={3}>
+              <PostsTable posts={posts.items} onRowClick={this.handleRowClick} />
+            </Paper>
           </Grid>
         </Grid>
-
 
         <Dialog open={dialogOpen} onClose={this.handleCloseDialog} aria-labelledby="form-dialog-title">
           <DialogTitle id="form-dialog-title">Edit Post</DialogTitle>
           <DialogContent>
-            <PostForm />
+            <PostForm post={selectedPost} />
 
           </DialogContent>
             <DialogActions>
               <Button onClick={this.handleCloseDialog} color="primary">
                 Cancel
               </Button>
-              <Button onClick={this.handleCloseDialog} color="primary">
+              <Button onClick={this.handleSavePost} color="primary">
                 Save
               </Button>
             </DialogActions>

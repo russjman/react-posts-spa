@@ -5,9 +5,9 @@ import { getPostsSuccess, getPostsError } from "../actions/posts";
 export function* getPosts() {
   try {
     const postData = yield call(searchPosts);
-     put(getPostsSuccess(postData));
+    yield put(getPostsSuccess(postData));
   } catch (error) {
-     put(getPostsError(error.toString()));
+    yield put(getPostsError(error.toString()));
   }
 }
 

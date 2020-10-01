@@ -21,7 +21,7 @@ const searchPosts = async () => {
     console.log(resWrapper);
     throw new Error(resWrapper);
   }
-  return resWrapper.data;
+  return resWrapper;
 };
 
 export { searchPosts, fetchApi };

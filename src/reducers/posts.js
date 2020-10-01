@@ -6,6 +6,7 @@ export const postsReducerDefaultState = {
 export default (state = postsReducerDefaultState, action) => {
   switch (action.type) {
     case 'EDIT_POST':
+      console.log('EDIT_POST',action);
       return {
         ...state,
         items: state.items.map((post) => {
