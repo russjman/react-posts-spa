@@ -1,11 +1,11 @@
 import React from 'react';
 
-import { Button, Container, Grid, Paper, TextField, Dialog, DialogContent, DialogContentText, DialogActions, DialogTitle } from '@material-ui/core';
+import { Button, Container, Grid, Paper, TextField, Dialog, DialogContent, DialogActions, DialogTitle } from '@material-ui/core';
 import PostsTable from './posts/PostsTable';
 import PostForm from './posts/PostForm';
 
 import { connect } from 'react-redux';
-import { getPosts, editPostAction } from '../actions/posts'
+import { getPosts, editPostAction, addPost } from '../actions/posts'
 
 // TODO: More Unit tests
 // TODO: Add post(save to store)
@@ -34,7 +34,7 @@ class Posts extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getPosts()
+    this.props.getPosts();
   }
 
   handleOpenDialog() {
@@ -55,15 +55,21 @@ class Posts extends React.Component {
   handleSavePost(e) {
     console.log('handleSavePost', e.target.post);
     const { post } = e.target;
-    this.props.editPostAction(post.id, post)
+    if(post.id) {
+      this.props.editPostAction(post.id, post)
+    } else {
+      post.id = this.props.posts.items.length + 1
+      this.props.addPost(post)
+    }
     this.setState({dialogOpen:false, selectedPost: {}});
+    this.props.getPosts();
   }
 
   handleSearchPost(e) {
     console.log('handleSearchPost',e.target.value);
     const { posts } = this.props;
     const { value } = e.target;
-      this.setState({searchString: value, filteredPosts: posts.items.filter(p =>  p.title.includes(value))});
+    this.setState({searchString: value, filteredPosts: posts.items.filter(p =>  p.title.includes(value))});
   }
 
   render() {
@@ -102,9 +108,16 @@ class Posts extends React.Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  return {
+    posts: state.posts
+  }
+}
+
 const mapDispatchToProps = {
   getPosts,
-  editPostAction
+  editPostAction,
+  addPost
 };
 
-export default connect(null,mapDispatchToProps)(Posts);
+export default connect(mapStateToProps, mapDispatchToProps)(Posts);

@@ -22,11 +22,15 @@ export const editPostAction = (id, update) => ({
   update
 });
 
+// ADD_POST
+export const addPost = (payload) => ({
+  type: 'ADD_POST',
+  payload
+});
+
 
 export const getPostsSuccess = (payload) => ({
   type: 'GET_POSTS_SUCCESS',
   payload,
 });
 export const getPostsError = (payload) => ({ type: 'GET_POSTS_ERROR', payload });
-
-

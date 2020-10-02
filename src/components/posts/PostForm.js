@@ -25,7 +25,7 @@ class  PostForm  extends React.Component {
 
   render() {
     console.log('render props', this.props);
-    const { userId, id, title, body } = this.state;
+    const { title, body } = this.state;
 
     return (
       <form noValidate>
