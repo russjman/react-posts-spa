@@ -4,15 +4,13 @@ import { Button, Container, Grid, Paper, TextField, Dialog, DialogContent, Dialo
 import PostsTable from './posts/PostsTable';
 import PostForm from './posts/PostForm';
 
-import { useSelector, useDispatch, connect } from 'react-redux';
-import { editPostAction } from '../actions/posts'
+import { connect } from 'react-redux';
+import { getPosts, editPostAction } from '../actions/posts'
 
 // TODO: Unit tests
 // TODO: Get posts on load
-// TODO: Filter/search posts by title
 // TODO: Edit post(save to store)
 // TODO: Add post(save to store)
-// TODO: Add post button and modal ui
 class Posts extends React.Component {
 
   constructor(props) {
@@ -20,7 +18,8 @@ class Posts extends React.Component {
     this.state = {
       dialogOpen: false,
       selectedPost: {},
-    }
+      filteredPosts: []
+    };
 
     this.handleCloseDialog = this.handleCloseDialog.bind(this);
     this.handleRowClick = this.handleRowClick.bind(this);
@@ -29,6 +28,7 @@ class Posts extends React.Component {
   }
 
   componentDidMount() {
+    this.props.getPosts()
   }
 
   handleOpenDialog() {
@@ -48,40 +48,44 @@ class Posts extends React.Component {
 
   handleSavePost(e) {
     console.log('handleSavePost', this.state.selectedPost);
-    // const dispatch = useDispatch();
-    // dispatch(editPostAction());
-    // this.setState({dialogOpen:false});
+    const { id } = this.state.selectedPost;
+
+    this.props.editPostAction(this.state.selectedPost.id, this.state.selectedPost)
+    this.setState({dialogOpen:false, selectedPost: {}});
+    this.props.getPosts();
+
   }
 
   handleSearchPost(e) {
-    console.log('handleSearchPost', e.target.value);
     const { posts } = this.props;
     const { value } = e.target;
     if(value) {
-      this.setState({filteredPosts: posts.items.filter(p => p.title.contains(value) ) });
+      this.setState({filteredPosts: posts.items.filter(p =>  p.title.includes(value))});
+    } else {
+      this.setState({filteredPosts: []});
     }
   }
 
   render() {
     const { dialogOpen, selectedPost, filteredPosts} = this.state;
     const { posts } = this.props;
+
     return (
       <Container>
         <Grid justify="center" spacing={2} container>
           <Grid item xs={5}>
             <TextField id="posts-search-field" label="Search Posts" onChange={(e) => this.handleSearchPost(e) } variant="outlined" fullWidth />
           </Grid>
-          <Grid item xs={1}><Button color="primary" variant="contained" fullWidth>Search</Button></Grid>
           <Grid item xs={1}><Button color="primary" variant="contained" onClick={() => this.handleOpenDialog() } fullWidth>Add</Button></Grid>
           <Grid item xs={12} >
             <Paper elevation={3}>
-              <PostsTable posts={posts.items} onRowClick={this.handleRowClick} />
+              <PostsTable posts={filteredPosts.length ? filteredPosts : posts.items} onRowClick={this.handleRowClick} />
             </Paper>
           </Grid>
         </Grid>
 
         <Dialog open={dialogOpen} onClose={this.handleCloseDialog} aria-labelledby="form-dialog-title">
-          <DialogTitle id="form-dialog-title">Edit Post</DialogTitle>
+          <DialogTitle id="form-dialog-title">Edit Post {selectedPost.id}</DialogTitle>
           <DialogContent>
             <PostForm post={selectedPost} />
 
@@ -100,4 +104,9 @@ class Posts extends React.Component {
   }
 }
 
-export default Posts;
+const mapDispatchToProps = {
+  getPosts,
+  editPostAction
+};
+
+export default connect(null,mapDispatchToProps)(Posts);
