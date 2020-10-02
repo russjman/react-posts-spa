@@ -10,7 +10,8 @@ function App(props) {
 
   return (
     <div className="PostsSPA">
-      <h1>Posts: {posts.items.length}</h1>
+      <h1>Blog Posts SPA</h1>
+      <h3>Posts: {posts.items.length}</h3>
       <Posts posts={posts} />
     </div>
   );

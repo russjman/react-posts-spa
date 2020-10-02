@@ -8,16 +8,21 @@ import { connect } from 'react-redux';
 import { getPosts, editPostAction } from '../actions/posts'
 
 // TODO: Unit tests
-// TODO: Get posts on load
-// TODO: Edit post(save to store)
 // TODO: Add post(save to store)
+// TODO: update readme
+
 class Posts extends React.Component {
 
   constructor(props) {
     super(props)
     this.state = {
       dialogOpen: false,
-      selectedPost: {},
+      selectedPost: {
+        id: '',
+        userId: '',
+        title: '',
+        body: ''
+      },
       filteredPosts: []
     };
 
@@ -47,13 +52,10 @@ class Posts extends React.Component {
   }
 
   handleSavePost(e) {
-    console.log('handleSavePost', this.state.selectedPost);
-    const { id } = this.state.selectedPost;
-
-    this.props.editPostAction(this.state.selectedPost.id, this.state.selectedPost)
+    console.log('handleSavePost', e.target.post);
+    const { post } = e.target;
+    this.props.editPostAction(post.id, post)
     this.setState({dialogOpen:false, selectedPost: {}});
-    this.props.getPosts();
-
   }
 
   handleSearchPost(e) {
@@ -87,15 +89,11 @@ class Posts extends React.Component {
         <Dialog open={dialogOpen} onClose={this.handleCloseDialog} aria-labelledby="form-dialog-title">
           <DialogTitle id="form-dialog-title">Edit Post {selectedPost.id}</DialogTitle>
           <DialogContent>
-            <PostForm post={selectedPost} />
-
+            <PostForm post={selectedPost} saveCallback={this.handleSavePost} />
           </DialogContent>
             <DialogActions>
               <Button onClick={this.handleCloseDialog} color="primary">
                 Cancel
-              </Button>
-              <Button onClick={this.handleSavePost} color="primary">
-                Save
               </Button>
             </DialogActions>
           </Dialog>
