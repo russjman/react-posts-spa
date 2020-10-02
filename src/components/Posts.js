@@ -7,7 +7,7 @@ import PostForm from './posts/PostForm';
 import { connect } from 'react-redux';
 import { getPosts, editPostAction } from '../actions/posts'
 
-// TODO: Unit tests
+// TODO: More Unit tests
 // TODO: Add post(save to store)
 // TODO: update readme
 
@@ -23,7 +23,8 @@ class Posts extends React.Component {
         title: '',
         body: ''
       },
-      filteredPosts: []
+      filteredPosts: [],
+      searchString: ''
     };
 
     this.handleCloseDialog = this.handleCloseDialog.bind(this);
@@ -59,35 +60,34 @@ class Posts extends React.Component {
   }
 
   handleSearchPost(e) {
+    console.log('handleSearchPost',e.target.value);
     const { posts } = this.props;
     const { value } = e.target;
-    if(value) {
-      this.setState({filteredPosts: posts.items.filter(p =>  p.title.includes(value))});
-    } else {
-      this.setState({filteredPosts: []});
-    }
+      this.setState({searchString: value, filteredPosts: posts.items.filter(p =>  p.title.includes(value))});
   }
 
   render() {
-    const { dialogOpen, selectedPost, filteredPosts} = this.state;
+    const { dialogOpen, selectedPost, filteredPosts, searchString} = this.state;
     const { posts } = this.props;
 
     return (
       <Container>
         <Grid justify="center" spacing={2} container>
-          <Grid item xs={5}>
-            <TextField id="posts-search-field" label="Search Posts" onChange={(e) => this.handleSearchPost(e) } variant="outlined" fullWidth />
+          <Grid item xs={8}>
+            <TextField id="posts-search-field" label="Search Posts" onChange={(e) => this.handleSearchPost(e) } variant="outlined" value={searchString} fullWidth />
           </Grid>
-          <Grid item xs={1}><Button color="primary" variant="contained" onClick={() => this.handleOpenDialog() } fullWidth>Add</Button></Grid>
+          <Grid item xs={2}><Button color="primary" variant="contained" onClick={() => this.handleOpenDialog() } fullWidth>Add</Button></Grid>
+          <Grid item xs={2}><Button color="primary" variant="contained" onClick={() => this.setState({searchString: ''}) } fullWidth>Clear</Button></Grid>
+
           <Grid item xs={12} >
             <Paper elevation={3}>
-              <PostsTable posts={filteredPosts.length ? filteredPosts : posts.items} onRowClick={this.handleRowClick} />
+              <PostsTable posts={searchString ? filteredPosts : posts.items} onRowClick={this.handleRowClick} />
             </Paper>
           </Grid>
         </Grid>
 
         <Dialog open={dialogOpen} onClose={this.handleCloseDialog} aria-labelledby="form-dialog-title">
-          <DialogTitle id="form-dialog-title">Edit Post {selectedPost.id}</DialogTitle>
+          <DialogTitle id="form-dialog-title">{selectedPost.id ? 'Edit' : 'Add'} Post {selectedPost.id}</DialogTitle>
           <DialogContent>
             <PostForm post={selectedPost} saveCallback={this.handleSavePost} />
           </DialogContent>
