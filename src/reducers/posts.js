@@ -24,6 +24,12 @@ export default (state = postsReducerDefaultState, action) => {
       return {
         ...state,
       };
+    case 'ADD_POST':
+      console.log('ADD_POST',action);
+      state.items.push(action.payload);
+      return {
+        ...state
+      };
     case 'GET_POSTS_SUCCESS':
       console.log('GET_POSTS_SUCCESS',action);
       return {

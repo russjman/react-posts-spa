@@ -1,3 +1,8 @@
+## React Posts Single Page App
+### To run frontend `yarn start` or `npm start` in root directory
+### To run backend `yarn startServer` or `npm startServer` in `\server`
+### To test `yarn test`
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

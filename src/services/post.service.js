@@ -1,5 +1,5 @@
 // Endpoint base url
-const url = 'https://jsonplaceholder.typicode.com/posts';
+const url = 'http://localhost:8080';
 
 /**
  * Fetch api wrapper
@@ -19,9 +19,9 @@ const searchPosts = async () => {
   const resWrapper = await response.json();
   if (response.status >= 400) {
     console.log(resWrapper);
-    throw new Error(resWrapper);
+    throw new Error(resWrapper.data);
   }
-  return resWrapper;
+  return resWrapper.data;
 };
 
 export { searchPosts, fetchApi };
