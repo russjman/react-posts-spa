@@ -1,9 +1,15 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import App from '../App';
+import TestProvider from '../utils/TestProvider';
 
-test('renders learn react link', () => {
-  const { getByText } = render(<App />);
-  const linkElement = getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+describe('<App />', () => {
+  it('Renders successfully without error', () => {
+    const app = render(
+      <TestProvider>
+        <App />
+      </TestProvider>,
+    );
+    expect(app.container).toBeTruthy();
+  });
 });
