@@ -4,3 +4,16 @@ body {
 
 .PostsSPA {
 }
+
+.PostsSPA header {
+  margin-bottom: 24px;
+}
+
+.PostsSPA header  > div {
+  display: flex;
+  justify-content: space-between;
+}
+
+.PostsSPA .toolbar button {
+  height: 100%;
+}

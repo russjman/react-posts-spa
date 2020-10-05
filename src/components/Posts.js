@@ -8,7 +8,6 @@ import { connect } from 'react-redux';
 import { getPosts, editPostAction, addPost } from '../actions/posts'
 
 // TODO: More Unit tests
-// TODO: Add post(save to store)
 // TODO: update readme
 
 class Posts extends React.Component {
@@ -61,8 +60,7 @@ class Posts extends React.Component {
       post.id = this.props.posts.items.length + 1
       this.props.addPost(post)
     }
-    this.setState({dialogOpen:false, selectedPost: {}});
-    this.props.getPosts();
+    this.setState({dialogOpen:false, selectedPost: {}, filteredPosts: {}, searchString: ''});
   }
 
   handleSearchPost(e) {
@@ -78,12 +76,12 @@ class Posts extends React.Component {
 
     return (
       <Container>
-        <Grid justify="center" spacing={2} container>
+        <Grid className="toolbar" justify="center" spacing={2} container>
           <Grid item xs={8}>
-            <TextField id="posts-search-field" label="Search Posts" onChange={(e) => this.handleSearchPost(e) } variant="outlined" value={searchString} fullWidth />
+            <TextField id="posts-search-field" size="small" label="Search Posts" onChange={(e) => this.handleSearchPost(e) } variant="outlined" value={searchString} fullWidth />
           </Grid>
-          <Grid item xs={2}><Button color="primary" variant="contained" onClick={() => this.handleOpenDialog() } fullWidth>Add</Button></Grid>
           <Grid item xs={2}><Button color="primary" variant="contained" onClick={() => this.setState({searchString: ''}) } fullWidth>Clear</Button></Grid>
+          <Grid item xs={2}><Button color="primary" variant="contained" onClick={() => this.handleOpenDialog() } fullWidth>Add</Button></Grid>
 
           <Grid item xs={12} >
             <Paper elevation={3}>
