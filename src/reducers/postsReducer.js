@@ -3,21 +3,21 @@ export const postsReducerDefaultState = {
   error: ''
 };
 
-export default (state = postsReducerDefaultState, action) => {
+export default function postsReducer(state = postsReducerDefaultState, action = {}) {
   switch (action.type) {
     case 'EDIT_POST':
       console.log('EDIT_POST',action);
       return {
         ...state,
-        items: state.items.map((post) => {
-          if (post.id === action.id) {
+        items: state.items.map((item) => {
+          if (item.id === action.update.id) {
             return {
-              ...post,
+              ...item,
               ...action.update,
             };
           }
-          return post;
-        })
+          return item;
+        }),
       };
     case 'GET_POSTS':
       console.log('GET_POSTS',action);
@@ -41,5 +41,6 @@ export default (state = postsReducerDefaultState, action) => {
       return { ...state, error: action.payload };
     default:
       return state;
+
   }
 };

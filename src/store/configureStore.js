@@ -2,7 +2,7 @@ import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import createSagaMiddleware from 'redux-saga';
 
-import postsReducer from '../reducers/posts';
+import postsReducer from '../reducers/postsReducer';
 
 import sagas from '../sagas';
 
