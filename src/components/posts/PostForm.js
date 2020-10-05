@@ -12,7 +12,7 @@ class  PostForm  extends React.Component {
   }
 
   handleChange(e) {
-    console.log('handleChange',e.target.value,this.state);
+    // console.log('handleChange',e.target.value,this.state);
     let { state } = this;
     state[e.target.name] = e.target.value;
     this.setState(state);
@@ -23,14 +23,18 @@ class  PostForm  extends React.Component {
     this.props.saveCallback(e);
   }
 
+  handleCancel(e) {
+    this.props.cancelCallback(e);
+  }
   render() {
-    console.log('render props', this.props);
+    // console.log('render props', this.props);
     const { title, body } = this.state;
 
     return (
       <form noValidate>
-        <Button onClick={(e) => this.handleSave(e)} color="primary">Save</Button>
-
+        <Button onClick={(e) => this.handleSave(e)} color="primary" variant="outlined">Save</Button>
+        &nbsp;
+        <Button onClick={(e) => this.handleCancel(e)} color="default" variant="outlined">Cancel</Button>
         <TextField
             id="title-field"
             label="Title"

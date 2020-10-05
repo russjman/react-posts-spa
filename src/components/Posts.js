@@ -37,22 +37,22 @@ class Posts extends React.Component {
   }
 
   handleOpenDialog() {
-    console.log('handleCloseDialog');
+    // console.log('handleCloseDialog');
     this.setState({dialogOpen:true});
   }
 
   handleRowClick(e) {
-    console.log('handleRowClick', e);
+    // console.log('handleRowClick', e);
     this.setState({dialogOpen:true, selectedPost: e.data});
   }
 
   handleCloseDialog() {
-    console.log('handleCloseDialog');
+    // console.log('handleCloseDialog');
     this.setState({dialogOpen:false, selectedPost: {}});
   }
 
   handleSavePost(e) {
-    console.log('handleSavePost', e.target.post);
+    console.log('handleSavePost', e.target.post, this.state.selectedPost);
     const { post } = e.target;
     if(post.id) {
       this.props.editPostAction(post.id, post)
@@ -64,7 +64,7 @@ class Posts extends React.Component {
   }
 
   handleSearchPost(e) {
-    console.log('handleSearchPost',e.target.value);
+    // console.log('handleSearchPost',e.target.value);
     const { posts } = this.props;
     const { value } = e.target;
     this.setState({searchString: value, filteredPosts: posts.items.filter(p =>  p.title.includes(value))});
@@ -93,12 +93,10 @@ class Posts extends React.Component {
         <Dialog open={dialogOpen} onClose={this.handleCloseDialog} aria-labelledby="form-dialog-title">
           <DialogTitle id="form-dialog-title">{selectedPost.id ? 'Edit' : 'Add'} Post {selectedPost.id}</DialogTitle>
           <DialogContent>
-            <PostForm post={selectedPost} saveCallback={this.handleSavePost} />
+            <PostForm post={selectedPost} saveCallback={this.handleSavePost} cancelCallback={this.handleCloseDialog} />
           </DialogContent>
             <DialogActions>
-              <Button onClick={this.handleCloseDialog} color="primary">
-                Cancel
-              </Button>
+
             </DialogActions>
           </Dialog>
       </Container>
